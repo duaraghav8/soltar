@@ -11,7 +11,8 @@ let AST = require ('./AST.json'),
 			},
 			newline: '\n',
 			space: ' ',
-			quotes: 'single'
+			quotes: 'single',
+			minify: false
 		}
 	};
 	

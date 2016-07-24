@@ -6,5 +6,6 @@
 'use strict';
 
 module.exports = {
-	generate: require ('./lib/generator')
+	generate: require ('./lib/generator'),
+	version: require ('./package.json').version
 };
