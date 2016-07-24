@@ -1,0 +1,27 @@
+{
+  "name": "soltar",
+  "version": "1.0.0",
+  "description": "Generate Solidity Code from solidity-parser's AST",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duaraghav8/soltar.git"
+  },
+  "keywords": [
+    "Solidity",
+    "Code",
+    "Generation",
+    "Abstract",
+    "Syntax",
+    "Tree"
+  ],
+  "author": "duaraghav8@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/duaraghav8/soltar/issues"
+  },
+  "homepage": "https://github.com/duaraghav8/soltar#readme"
+}

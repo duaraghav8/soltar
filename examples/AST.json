@@ -1,0 +1,63 @@
+{
+  "type": "Program",
+  "body": [
+    {
+      "type": "ContractStatement",
+      "name": "Vote",
+      "is": [],
+      "body": [
+        {
+          "type": "ExpressionStatement",
+          "expression": {
+            "type": "DeclarativeExpression",
+            "name": "creator",
+            "literal": {
+              "type": "Type",
+              "literal": "address",
+              "members": [],
+              "array_parts": []
+            },
+            "is_constant": false,
+            "is_public": true,
+            "is_memory": false
+          }
+        },
+        {
+          "type": "FunctionDeclaration",
+          "name": "Vote",
+          "params": null,
+          "modifiers": null,
+          "body": {
+            "type": "BlockStatement",
+            "body": [
+              {
+                "type": "ExpressionStatement",
+                "expression": {
+                  "type": "AssignmentExpression",
+                  "operator": "=",
+                  "left": {
+                    "type": "Identifier",
+                    "name": "creator"
+                  },
+                  "right": {
+                    "type": "MemberExpression",
+                    "object": {
+                      "type": "Identifier",
+                      "name": "msg"
+                    },
+                    "property": {
+                      "type": "Identifier",
+                      "name": "sender"
+                    },
+                    "computed": false
+                  }
+                }
+              }
+            ]
+          },
+          "is_abstract": false
+        }
+      ]
+    }
+  ]
+}
