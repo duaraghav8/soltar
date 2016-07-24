@@ -43,3 +43,5 @@ contract Vote {
 	}
 }
 ```
+
+The above code corresponds to [this](https://github.com/duaraghav8/soltar/blob/master/examples/AST.json) Abstract Syntax Tree (see examples/)
