@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/duaraghav8/soltar/issues"
   },
-  "homepage": "https://github.com/duaraghav8/soltar#readme"
+  "homepage": "https://github.com/duaraghav8/soltar#readme",
+  "dependencies": {
+    "sol-explore": "^1.5.0"
+  }
 }
