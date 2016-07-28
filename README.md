@@ -128,9 +128,9 @@ contract Vote {
 }
 ```
 
-The above solidity code corresponds to [this](https://github.com/duaraghav8/soltar/blob/master/examples/AST.json) Abstract Syntax Tree
+The above solidity code corresponds to [this](https://github.com/duaraghav8/soltar/blob/master/examples/customized-options/AST.json) Abstract Syntax Tree
 
-See **examples** for a full contract example.
+See **examples** for a [full contract](https://github.com/duaraghav8/soltar/tree/master/examples/full-contract) example.
 
 #Future enhancements:
 
