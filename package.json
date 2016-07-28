@@ -12,11 +12,8 @@
   },
   "keywords": [
     "Solidity",
-    "Code",
-    "Generation",
-    "Abstract",
-    "Syntax",
-    "Tree"
+    "Code-Generation",
+    "Abstract-Syntax-Tree"
   ],
   "author": "duaraghav8@gmail.com",
   "license": "MIT",
