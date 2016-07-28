@@ -72,8 +72,8 @@ A typical AST would look like:
 ```
 
 The default options configuration is:
-```json
-{
+```js
+let options = {
 	format: {
 		indent: {
 			style: '\t',
