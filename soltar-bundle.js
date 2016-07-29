@@ -1,3 +1,4 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  *@fileoverview Implementation of code generating engine
  *@author Raghav Dua
@@ -5,7 +6,10 @@
 
 'use strict';
 
-var Syntax = require ('sol-explore').Syntax;
+var Syntax = require ('sol-explore').Syntax,
+	Soltar = {
+		version: require ('./package.json').version
+	};
 
 function getDefaultOptions () {
 	return {
@@ -1340,7 +1344,7 @@ CodeGenerator.Expression = {
 
 mergeObjects (CodeGenerator.prototype, CodeGenerator.Expression);
 
-module.exports = function (node, options) {
+Soltar.generate = function generate (node, options) {
 	var defaultOptions = options &&
 		options.format &&
 		options.format.minify ?
@@ -1362,3 +1366,386 @@ module.exports = function (node, options) {
 
  	return flatten (sourceCode);
 };
+
+if (typeof window !== 'undefined') {	//export to browser
+	window.Soltar = Soltar;
+}
+
+module.exports = Soltar;
+
+},{"./package.json":7,"sol-explore":2}],2:[function(require,module,exports){
+/**
+ *@fileoverview Exposes all the exploration-related functions through main object
+ *@author Raghav Dua
+ */
+
+'use strict';
+
+module.exports = {
+	traverse: require ('./lib/traverse'),
+	traversalOptions: require ('./lib/traversalOptions'),
+	Syntax: require ('./lib/syntax'),
+	version: require ('./package.json').version
+};
+},{"./lib/syntax":3,"./lib/traversalOptions":4,"./lib/traverse":5,"./package.json":6}],3:[function(require,module,exports){
+module.exports = {
+	'as': 'as',
+	'break': 'break',
+	'case': 'case',
+	'catch': 'catch',
+	'class': 'class',
+	'const': 'const',
+	'constant': 'constant',
+	'continue': 'continue',
+	'contract': 'contract',
+	'debugger': 'debugger',
+	'default': 'default',
+	'delete': 'delete',
+	'do': 'do',
+	'else': 'else',
+	'enum': 'enum',
+	'ether': 'ether',
+	'event': 'event',
+	'export': 'export',
+	'extends': 'extends',
+	'false': 'false',
+	'finally': 'finally',
+	'finney': 'finney',
+	'for': 'for',
+	'from': 'from',
+	'function': 'function',
+	'get': 'get',
+	'if': 'if',
+	'is': 'is',
+	'indexed': 'indexed',
+	'instanceof': 'instanceof',
+	'in': 'in',
+	'import': 'import',
+	'internal': 'internal',
+	'library': 'library',
+	'mapping': 'mapping',
+	'memory': 'memory',
+	'modifier': 'modifier',
+	'new': 'new',
+	'null': 'null',
+	'private': 'private',
+	'public': 'public',
+	'return': 'return',
+	'returns': 'returns',
+	'set': 'set',
+	'storage': 'storage',
+	'struct': 'struct',
+	'super': 'super',
+	'switch': 'switch',
+	'szabo': 'szabo',
+	'this': 'this',
+	'throw': 'throw',
+	'true': 'true',
+	'try': 'try',
+	'typeof': 'typeof',
+	'var': 'var',
+	'void': 'void',
+	'wei': 'wei',
+	'while': 'while',
+	'with': 'with'
+};
+},{}],4:[function(require,module,exports){
+/**
+ *@fileoverview options that a visitor may include in their enter() or leave() functions to alter normal traversal behavior
+ *@author Raghav Dua
+ */
+
+'use strict';
+
+module.exports = {
+	STOP_TRAVERSAL: 'stop',
+	SKIP_NODES_BELOW: 'skip'
+};
+},{}],5:[function(require,module,exports){
+/**
+ *@fileoverview Depth First Traversal of the given Abstract Syntax Tree
+ *@author Raghav Dua
+ */
+
+'use strict';
+
+var traversalOptions = require ('./traversalOptions');
+
+/**
+ * Constructor for creating an Element wrapper around node (to bundle other information with it)
+ * @param {Object} node The node to wrap
+ * @private
+ */
+var Element = function (node) {
+	if (!(this instanceof Element)) {
+		return new Element (node);
+	}
+
+	this.node = node;
+};
+
+/**
+ * Determine if a given object property is an explorable AST Node
+ * @param {Object} node The node to check
+ * @param {String} name Name of the key whose value is this node, to make sure we never explore a node's parent
+ * @private
+ */
+function isASTNode (node, name) {
+	return (
+		node !== null &&	//node shouldn't be null
+		typeof (node) === 'object' &&	//must be data type object
+		node.hasOwnProperty ('type') &&	//a 'type' key must exist in the node
+		typeof (node.type) === 'string' &&	//node.type's value must be a string
+		name !== 'parent'	//the key whose value is this entire node must not be 'parent'
+	);
+}
+
+/**
+ * Constructor for the internal Controller object
+ * @private
+ */
+function Controller () {}
+
+/**
+ * Set the Controller-wide flag
+ * @param {String} flag The flag to set
+ * @private
+ */
+Controller.prototype.notify = function notify (flag) {
+	this.__flag = flag;
+};
+
+/**
+ * Notify to set the Controller-wide flag for halting traversal
+ * @private
+ */
+Controller.prototype.skipNodesBelow = function skip () {
+	this.notify (traversalOptions.SKIP_NODES_BELOW);
+};
+
+/**
+ * Notify to set the Controller-wide flag for skipping child nodes of the current node
+ * @private
+ */
+Controller.prototype.stopTraversal = function stop () {
+	this.notify (traversalOptions.STOP_TRAVERSAL);
+};
+
+/**
+ * Initialize the state of the internal Controller Object before starting traversal
+ * @param {object} root The Abstract Syntax Tree object (treated as the AST's root itself)
+ * @param {Object} visitorActions The object containing enter and leave behaviors
+ * @private
+ */
+Controller.prototype.init = function init (root, visitorActions) {
+	this.root = root;
+	this.visitorActions = visitorActions;
+
+	this.__flag = null;
+	this.__current = null;
+};
+
+/**
+ * Execute user-provided callback, providing it with 'this' as context
+ * @param {Function} callback The callback to execute
+ * @param {Object} element The Element object containing the node currently being entered/left
+ * @returns {(String|undefined)} result Returns commands sent by the callback (for stopping or skipping)
+ * @private
+ */
+Controller.prototype.exec = function exec (callback, element) {
+	var prev, result;
+
+	prev = this.__current;
+	this.__flag = null;
+	this.__current = element;
+
+	if (typeof (callback) === 'function') {
+		result = callback.call (this, element.node);
+	}
+
+	this.__current = prev;
+	return result;
+};
+
+/**
+ * Implementation of the DFS traversal and executing callbacks upon enter & leave phases
+ * @param {object} root The Abstract Syntax Tree object (treated as the AST's root itself) to traverse
+ * @param {Object} visitorActions The object containing enter and leave behaviors
+ * @private
+ */
+Controller.prototype.traverse = function traverse (root, visitorActions) {
+	if (!isASTNode (root) ||
+		this.__flag === traversalOptions.STOP_TRAVERSAL) {
+
+		return;
+	}
+
+	//access Controller Object's context inside nested functions (where 'this' may not refer to the main object)
+	var CTRL_OBJECT = this;
+	var ret = this.exec (visitorActions.enter, new Element (root));
+
+	if (ret === traversalOptions.STOP_TRAVERSAL) {
+		
+		this.notify (ret);
+		return;
+
+	} else if (!(ret === traversalOptions.SKIP_NODES_BELOW ||
+		this.__flag === traversalOptions.SKIP_NODES_BELOW)) {
+
+		Object.keys (root).forEach (function (key) {
+			var child = root [key];
+
+			if (isASTNode (child)) {
+				CTRL_OBJECT.traverse (child, visitorActions);
+			} else if (child.constructor === Array) {
+				child.forEach (function (childItem) {
+					CTRL_OBJECT.traverse (childItem, visitorActions);
+				});
+			}
+		});
+
+	}
+
+	if (this.__flag !== traversalOptions.STOP_TRAVERSAL) {
+		this.exec (visitorActions.leave, new Element (root));
+	}
+};
+
+/**
+ * The single function exposed to the user
+ * @param {object} ast The Abstract Syntax Tree object to traverse
+ * @param {Object} visitorEnterOrActions The object containing enter and leave behaviors
+ */
+ module.exports = function (ast, visitorEnterOrActions) {
+ 	var visitorActions = {};
+
+ 	if (typeof (visitorEnterOrActions) === 'function') {
+ 		visitorActions = {
+ 			enter: visitorEnterOrActions
+ 		};
+ 	} else {
+ 		visitorActions.enter = visitorEnterOrActions.enter || function () {};
+ 		visitorActions.leave = visitorEnterOrActions.leave || function () {};
+ 	}
+
+ 	return new Controller ().traverse (ast, visitorActions);
+ };
+},{"./traversalOptions":4}],6:[function(require,module,exports){
+module.exports={
+  "_args": [
+    [
+      {
+        "name": "sol-explore",
+        "raw": "sol-explore",
+        "rawSpec": "",
+        "scope": null,
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/home/raghav/Desktop/github/soltar"
+    ]
+  ],
+  "_from": "sol-explore@latest",
+  "_id": "sol-explore@1.5.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/sol-explore",
+  "_nodeVersion": "4.2.6",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/sol-explore-1.5.0.tgz_1469639766416_0.4083775805775076"
+  },
+  "_npmUser": {
+    "email": "duaraghav8@gmail.com",
+    "name": "the-mad-king"
+  },
+  "_npmVersion": "3.9.6",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "sol-explore",
+    "raw": "sol-explore",
+    "rawSpec": "",
+    "scope": null,
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/sol-explore/-/sol-explore-1.5.0.tgz",
+  "_shasum": "bce099255ef44a48f14fff8252edd51a915cf319",
+  "_shrinkwrap": null,
+  "_spec": "sol-explore",
+  "_where": "/home/raghav/Desktop/github/soltar",
+  "author": {
+    "name": "Raghav Dua"
+  },
+  "bugs": {
+    "url": "https://github.com/duaraghav8/sol-explore/issues"
+  },
+  "dependencies": {},
+  "description": "Traversal functions for solidity-parser generated AST",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "bce099255ef44a48f14fff8252edd51a915cf319",
+    "tarball": "https://registry.npmjs.org/sol-explore/-/sol-explore-1.5.0.tgz"
+  },
+  "gitHead": "2923d7422bc23763afbdfe0c747337ddb139ae70",
+  "homepage": "https://github.com/duaraghav8/sol-explore#readme",
+  "keywords": [
+    "Abstract-Syntax-Tree",
+    "Traversal",
+    "Solidity"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "email": "duaraghav8@gmail.com",
+      "name": "the-mad-king"
+    }
+  ],
+  "name": "sol-explore",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duaraghav8/sol-explore.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.5.0"
+}
+
+},{}],7:[function(require,module,exports){
+module.exports={
+  "name": "soltar",
+  "version": "1.2.1",
+  "description": "Generate Solidity Code from solidity-parser's AST",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duaraghav8/soltar.git"
+  },
+  "keywords": [
+    "Solidity",
+    "Code-Generation",
+    "Abstract-Syntax-Tree"
+  ],
+  "author": "duaraghav8@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/duaraghav8/soltar/issues"
+  },
+  "homepage": "https://github.com/duaraghav8/soltar#readme",
+  "dependencies": {
+    "sol-explore": "^1.5.0"
+  }
+}
+
+},{}]},{},[1]);

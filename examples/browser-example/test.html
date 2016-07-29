@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<script src = "soltar-bundle.js"></script>
+	</head>
+	<body>
+		<h3><div id = "result"></div></h3>
+
+		<script>
+			let AST = {
+				type: 'Program',
+				body: [
+					{
+						type:'Literal',
+						value:"Jon Skeet can plant a seed and grow an Abstract Syntax Tree"
+					}
+				]
+			};
+			let stringLiteral = Soltar.generate (AST, {format:{quotes: 'double'}});
+
+			document.getElementById ('result').innerHTML = stringLiteral;
+		</script>
+	</body>
+</html>
