@@ -14,12 +14,18 @@ npm install --save soltar
 
 #Documentation
 
-In order to access Soltar's functionality, ```require()``` it like:
+To use Soltar in Browser, include:
+
+```html
+<script src="soltar-bundle.js"></script>
+```
+
+In order to access Soltar's functionality in Node.js, ```require()``` it like:
 ```js
 let Soltar = require ('soltar');
 ```
 
-Soltar provides several objects:
+#API
 
 1. **generate** - The main function that takes 2 arguments:
 ast (the Solidity Contract's abstract syntax tree (following the Spider monkey API) &
