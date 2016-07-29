@@ -15,7 +15,7 @@ let Soltar = require ('soltar');
 
 Soltar provides several objects:
 
-1. **generate** - The main function the takes 2 arguments:
+1. **generate** - The main function that takes 2 arguments:
 ast (the Solidity Contract's abstract syntax tree (following the Spider monkey API) &
 options (optional) to confgure the output
 
