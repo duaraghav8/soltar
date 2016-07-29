@@ -1,6 +1,6 @@
 {
   "name": "soltar",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Generate Solidity Code from solidity-parser's AST",
   "main": "index.js",
   "scripts": {
