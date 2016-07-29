@@ -1,5 +1,11 @@
 # soltar
-Generate Solidity Code from solidity-parser's AST
+Generate Solidity Code from its Abstract Syntax Tree. (The AST must follow the Spider Monkey API for defining AST nodes).
+
+An NPM module, [solidity-parser](https://github.com/ConsenSys/solidity-parser), exists if you want to generate AST of your solidity code.
+
+```bash
+npm install solidity-parser
+```
 
 #Installation
 ```bash
@@ -136,3 +142,7 @@ See **examples** for a [full contract](https://github.com/duaraghav8/soltar/tree
 
 	1. Browser Support
 	2. Commanline utility
+
+#PROBLEMS WITH solidity-parser
+There are currently a few bugs in solidity-parser. I've [listed them](https://github.com/duaraghav8/soltar/issues/6) so you can make sure you're not a victim of 1 of those. 
+I will soon release a fork of solidity-parser which I will actively maintain, with all known issues fixed.
