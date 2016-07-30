@@ -20,6 +20,8 @@ To use Soltar in Browser, include:
 <script src="soltar-bundle.js"></script>
 ```
 
+You can then access the Soltar object by using ```window.Soltar``` or simply ```Soltar```.
+
 In order to access Soltar's functionality in Node.js, ```require()``` it like:
 ```js
 let Soltar = require ('soltar');
