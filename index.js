@@ -319,7 +319,7 @@ CodeGenerator.Statement = {
 	},
 
 	EmptyStatement: function (node) {
-		return '';
+		return ';';
 	},
 
 	EnumDeclaration: function (node) {
@@ -527,7 +527,7 @@ CodeGenerator.Statement = {
 			'(',
 			GENERATOR_OBJECT [node.test.type] (node.test),
 			')',
-			GENERATOR_OBJECT._space,
+			node.consequent.type !== 'EmptyStatement' ? GENERATOR_OBJECT._space : '',
 			GENERATOR_OBJECT [node.consequent.type] (node.consequent)
 		];
 
