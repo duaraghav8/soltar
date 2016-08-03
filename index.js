@@ -267,14 +267,16 @@ CodeGenerator.Statement = {
 			node.is.forEach (function (parent) {
 				result.push (
 					GENERATOR_OBJECT [parent.type] (parent),
+					',',
 					GENERATOR_OBJECT._space
 				);
 			});
 		}
 
+		result.splice (-2, 1);	//remove the last (extra) comma
 		result.push ('{');
 
-		if (node.body.length) {
+		if (node.body) {
 			result.push (GENERATOR_OBJECT._lineBreak);
 			GENERATOR_OBJECT._indent = append (GENERATOR_OBJECT._indent, GENERATOR_OBJECT._indentStyle);
 
@@ -287,11 +289,11 @@ CodeGenerator.Statement = {
 				);
 			});
 
-			result.pop ();	//remove the last (extra) line break
 			GENERATOR_OBJECT._indent = removeAppended (GENERATOR_OBJECT._indent, GENERATOR_OBJECT._indentStyle);
+			result [result.length - 1] = GENERATOR_OBJECT._indent;	//remove the last (extra) line break & add indent
 		}
 
-		result.push (GENERATOR_OBJECT._indent, '}');
+		result.push ('}');
 
 		return result;
 	},
@@ -319,7 +321,7 @@ CodeGenerator.Statement = {
 	},
 
 	EmptyStatement: function (node) {
-		return '';
+		return ';';
 	},
 
 	EnumDeclaration: function (node) {
@@ -527,7 +529,7 @@ CodeGenerator.Statement = {
 			'(',
 			GENERATOR_OBJECT [node.test.type] (node.test),
 			')',
-			GENERATOR_OBJECT._space,
+			node.consequent.type !== 'EmptyStatement' ? GENERATOR_OBJECT._space : '',
 			GENERATOR_OBJECT [node.consequent.type] (node.consequent)
 		];
 
@@ -662,11 +664,13 @@ CodeGenerator.Statement = {
 			node.is.forEach (function (parent) {
 				result.push (
 					GENERATOR_OBJECT [parent.type] (parent),
+					',',
 					GENERATOR_OBJECT._space
 				);
 			});
 		}
 
+		result.splice (-2, 1);	//remove the last (extra) comma
 		result.push ('{');
 
 		if (node.body) {
@@ -682,9 +686,8 @@ CodeGenerator.Statement = {
 				);
 			});
 
-			result.pop ();	//remove the last (extra) line break
 			GENERATOR_OBJECT._indent = removeAppended (GENERATOR_OBJECT._indent, GENERATOR_OBJECT._indentStyle);
-			result.push (GENERATOR_OBJECT._indent);
+			result [result.length - 1] = GENERATOR_OBJECT._indent;	//remove the last (extra) line break & add indent
 		}
 
 		result.push ('}');
