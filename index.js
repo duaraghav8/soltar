@@ -1136,6 +1136,8 @@ CodeGenerator.Expression = {
 			GENERATOR_OBJECT._space,
 			node.is_constant ? Syntax.constant + GENERATOR_OBJECT._space : '',
 			node.is_public ? Syntax.public + GENERATOR_OBJECT._space : '',
+			node.is_private ? Syntax.private + GENERATOR_OBJECT._space : '',
+			node.is_internal ? Syntax.internal + GENERATOR_OBJECT._space : '',
 			node.is_memory ? Syntax.memory + GENERATOR_OBJECT._space : '',
 			node.name
 		];
