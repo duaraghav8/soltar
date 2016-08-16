@@ -6,6 +6,11 @@ An NPM module, [solidity-parser](https://github.com/ConsenSys/solidity-parser), 
 ```bash
 npm install solidity-parser
 ```
+I've also released a clone of solidity-parser called [solparse](https://github.com/duaraghav8/solparse) - it has a lot of bug fixes and I maintain it.
+
+```
+npm install solparse
+```
 
 #Installation
 ```bash
@@ -148,9 +153,8 @@ See **examples** for a [full contract](https://github.com/duaraghav8/soltar/tree
 
 #Future enhancements:
 
-	1. Browser Support
-	2. Commanline utility
+	1. Commanline utility
 
 #PROBLEMS WITH solidity-parser
-There are currently a few bugs in solidity-parser. I've [listed them](https://github.com/duaraghav8/soltar/issues/6) so you can make sure you're not a victim of 1 of those. 
-I will soon release a fork of solidity-parser which I will actively maintain, with all known issues fixed.
+There are currently a few bugs in solidity-parser. I've [listed them](https://github.com/duaraghav8/soltar/issues/6).
+You can instead choose to install solparse (see above).
