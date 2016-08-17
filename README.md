@@ -35,7 +35,7 @@ let Soltar = require ('soltar');
 #API
 
 1. **generate** - The main function that takes 2 arguments:
-ast (the Solidity Contract's abstract syntax tree (following the Spider monkey API) &
+ast (the Solidity Code's abstract syntax tree (following the Spider monkey API) &
 options (optional) to confgure the output
 
 2. **version** - Get version information
@@ -153,7 +153,7 @@ See **examples** for a [full contract](https://github.com/duaraghav8/soltar/tree
 
 #Future enhancements:
 
-	1. Commanline utility
+	1. Commandline utility
 
 #PROBLEMS WITH solidity-parser
 There are currently a few bugs in solidity-parser. I've [listed them](https://github.com/duaraghav8/soltar/issues/6).
