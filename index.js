@@ -1344,7 +1344,7 @@ CodeGenerator.Expression = {
 	},
 
 	SequenceExpression: function (node) {
-		var GENERATOR_OBJECT = this, result = [];
+		var GENERATOR_OBJECT = this, result = ['('];
 
 		node.expressions.forEach (function (expr) {
 			result.push (
@@ -1357,6 +1357,8 @@ CodeGenerator.Expression = {
 		if (result.length >= 2) {
 			result = result.slice (0, -2);
 		}
+
+		result.push (')');
 
 		return result;
 	},
