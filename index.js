@@ -1013,6 +1013,10 @@ CodeGenerator.Statement = {
 		return result;
 	},
 
+	UsingStatement: function (node) {
+		return Syntax.using + this._space + node.library + this._space + Syntax.for + this._space + node.for + ';';
+	},
+
 	VariableDeclaration: function (node) {
 		var GENERATOR_OBJECT = this, result;
 

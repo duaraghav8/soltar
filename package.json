@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/duaraghav8/soltar#readme",
   "dependencies": {
-    "sol-explore": "^1.5.0"
+    "sol-explore": "^1.6.2"
   }
 }
