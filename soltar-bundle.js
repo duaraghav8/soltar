@@ -1014,6 +1014,18 @@ CodeGenerator.Statement = {
 		return result;
 	},
 
+	UsingStatement: function (node) {
+		var GENERATOR_OBJECT = this, result;
+
+		result = [
+			Syntax.using + this._space + node.library + this._space + Syntax.for + this._space,
+			typeof node.for === 'string' ? node.for : this [node.for.type] (node.for),
+			';'
+		];
+
+		return result;
+	},
+
 	VariableDeclaration: function (node) {
 		var GENERATOR_OBJECT = this, result;
 
@@ -1450,12 +1462,18 @@ module.exports = Soltar;
 
 'use strict';
 
-module.exports = {
+var SolExplore = {
 	traverse: require ('./lib/traverse'),
 	traversalOptions: require ('./lib/traversalOptions'),
 	Syntax: require ('./lib/syntax'),
 	version: require ('./package.json').version
 };
+
+if (typeof window !== 'undefined') {
+	window.SolExplore = SolExplore;
+}
+
+module.exports = SolExplore;
 },{"./lib/syntax":3,"./lib/traversalOptions":4,"./lib/traverse":5,"./package.json":6}],3:[function(require,module,exports){
 module.exports = {
 	'as': 'as',
@@ -1512,6 +1530,7 @@ module.exports = {
 	'true': 'true',
 	'try': 'try',
 	'typeof': 'typeof',
+	'using': 'using',
 	'var': 'var',
 	'void': 'void',
 	'wei': 'wei',
@@ -1621,7 +1640,7 @@ Controller.prototype.init = function init (root, visitorActions) {
  * @returns {(String|undefined)} result Returns commands sent by the callback (for stopping or skipping)
  * @private
  */
-Controller.prototype.exec = function exec (callback, element) {
+Controller.prototype.exec = function exec (callback, element, parentElement) {
 	var prev, result;
 
 	prev = this.__current;
@@ -1629,7 +1648,9 @@ Controller.prototype.exec = function exec (callback, element) {
 	this.__current = element;
 
 	if (typeof (callback) === 'function') {
-		result = callback.call (this, element.node);
+		result = callback.call (
+			this, element.node, parentElement ? parentElement.node : undefined
+		);
 	}
 
 	this.__current = prev;
@@ -1642,7 +1663,7 @@ Controller.prototype.exec = function exec (callback, element) {
  * @param {Object} visitorActions The object containing enter and leave behaviors
  * @private
  */
-Controller.prototype.traverse = function traverse (root, visitorActions) {
+Controller.prototype.traverse = function traverse (root, parent, visitorActions) {
 	if (!isASTNode (root) ||
 		this.__flag === traversalOptions.STOP_TRAVERSAL) {
 
@@ -1651,7 +1672,7 @@ Controller.prototype.traverse = function traverse (root, visitorActions) {
 
 	//access Controller Object's context inside nested functions (where 'this' may not refer to the main object)
 	var CTRL_OBJECT = this;
-	var ret = this.exec (visitorActions.enter, new Element (root));
+	var ret = this.exec (visitorActions.enter, new Element (root), new Element (parent));
 
 	if (ret === traversalOptions.STOP_TRAVERSAL) {
 		
@@ -1665,10 +1686,10 @@ Controller.prototype.traverse = function traverse (root, visitorActions) {
 			var child = root [key];
 
 			if (isASTNode (child)) {
-				CTRL_OBJECT.traverse (child, visitorActions);
-			} else if (child.constructor === Array) {
+				CTRL_OBJECT.traverse (child, root, visitorActions);
+			} else if (child && child.constructor === Array) {
 				child.forEach (function (childItem) {
-					CTRL_OBJECT.traverse (childItem, visitorActions);
+					CTRL_OBJECT.traverse (childItem, root, visitorActions);
 				});
 			}
 		});
@@ -1697,7 +1718,7 @@ Controller.prototype.traverse = function traverse (root, visitorActions) {
  		visitorActions.leave = visitorEnterOrActions.leave || function () {};
  	}
 
- 	return new Controller ().traverse (ast, visitorActions);
+ 	return new Controller ().traverse (ast, null, visitorActions);
  };
 },{"./traversalOptions":4}],6:[function(require,module,exports){
 module.exports={
@@ -1705,24 +1726,24 @@ module.exports={
     [
       {
         "name": "sol-explore",
-        "raw": "sol-explore",
-        "rawSpec": "",
+        "raw": "sol-explore@^1.5.0",
+        "rawSpec": "^1.5.0",
         "scope": null,
-        "spec": "latest",
-        "type": "tag"
+        "spec": ">=1.5.0 <2.0.0",
+        "type": "range"
       },
       "/home/raghav/Desktop/github/soltar"
     ]
   ],
-  "_from": "sol-explore@latest",
-  "_id": "sol-explore@1.5.0",
+  "_from": "sol-explore@>=1.5.0 <2.0.0",
+  "_id": "sol-explore@1.6.2",
   "_inCache": true,
   "_installable": true,
   "_location": "/sol-explore",
   "_nodeVersion": "4.2.6",
   "_npmOperationalInternal": {
     "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/sol-explore-1.5.0.tgz_1469639766416_0.4083775805775076"
+    "tmp": "tmp/sol-explore-1.6.2.tgz_1472483822108_0.5602311752736568"
   },
   "_npmUser": {
     "email": "duaraghav8@gmail.com",
@@ -1732,19 +1753,19 @@ module.exports={
   "_phantomChildren": {},
   "_requested": {
     "name": "sol-explore",
-    "raw": "sol-explore",
-    "rawSpec": "",
+    "raw": "sol-explore@^1.5.0",
+    "rawSpec": "^1.5.0",
     "scope": null,
-    "spec": "latest",
-    "type": "tag"
+    "spec": ">=1.5.0 <2.0.0",
+    "type": "range"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/sol-explore/-/sol-explore-1.5.0.tgz",
-  "_shasum": "bce099255ef44a48f14fff8252edd51a915cf319",
+  "_resolved": "https://registry.npmjs.org/sol-explore/-/sol-explore-1.6.2.tgz",
+  "_shasum": "43ae8c419fd3ac056a05f8a9d1fb1022cd41ecc2",
   "_shrinkwrap": null,
-  "_spec": "sol-explore",
+  "_spec": "sol-explore@^1.5.0",
   "_where": "/home/raghav/Desktop/github/soltar",
   "author": {
     "name": "Raghav Dua"
@@ -1757,10 +1778,10 @@ module.exports={
   "devDependencies": {},
   "directories": {},
   "dist": {
-    "shasum": "bce099255ef44a48f14fff8252edd51a915cf319",
-    "tarball": "https://registry.npmjs.org/sol-explore/-/sol-explore-1.5.0.tgz"
+    "shasum": "43ae8c419fd3ac056a05f8a9d1fb1022cd41ecc2",
+    "tarball": "https://registry.npmjs.org/sol-explore/-/sol-explore-1.6.2.tgz"
   },
-  "gitHead": "2923d7422bc23763afbdfe0c747337ddb139ae70",
+  "gitHead": "a56fc36775dc364b69a988e228562e9f385da5d9",
   "homepage": "https://github.com/duaraghav8/sol-explore#readme",
   "keywords": [
     "Abstract-Syntax-Tree",
@@ -1785,13 +1806,13 @@ module.exports={
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.5.0"
+  "version": "1.6.2"
 }
 
 },{}],7:[function(require,module,exports){
 module.exports={
   "name": "soltar",
-  "version": "2.0.2",
+  "version": "2.0.4",
   "description": "Generate Solidity Code from solidity-parser's AST",
   "main": "index.js",
   "scripts": {
@@ -1813,7 +1834,7 @@ module.exports={
   },
   "homepage": "https://github.com/duaraghav8/soltar#readme",
   "dependencies": {
-    "sol-explore": "^1.5.0"
+    "sol-explore": "^1.6.2"
   }
 }
 

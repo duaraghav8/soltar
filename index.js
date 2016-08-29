@@ -1014,7 +1014,15 @@ CodeGenerator.Statement = {
 	},
 
 	UsingStatement: function (node) {
-		return Syntax.using + this._space + node.library + this._space + Syntax.for + this._space + node.for + ';';
+		var GENERATOR_OBJECT = this, result;
+
+		result = [
+			Syntax.using + this._space + node.library + this._space + Syntax.for + this._space,
+			typeof node.for === 'string' ? node.for : this [node.for.type] (node.for),
+			';'
+		];
+
+		return result;
 	},
 
 	VariableDeclaration: function (node) {
