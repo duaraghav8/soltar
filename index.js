@@ -1162,11 +1162,11 @@ CodeGenerator.Expression = {
 		var GENERATOR_OBJECT = this, result;
 
 		result = [
-			GENERATOR_OBJECT [node.left.type] (node.left),
+			'(', GENERATOR_OBJECT [node.left.type] (node.left), ')',
 			GENERATOR_OBJECT._space,
 			node.operator,
 			GENERATOR_OBJECT._space,
-			GENERATOR_OBJECT [node.right.type] (node.right)
+			'(', GENERATOR_OBJECT [node.right.type] (node.right), ')'
 		];
 
 		return result;
