@@ -1042,6 +1042,25 @@ CodeGenerator.Statement = {
 		return result;
 	},
 
+	VariableDeclarationTuple: function (node) {
+		var GENERATOR_OBJECT = this, result;
+
+		result = [Syntax.var, GENERATOR_OBJECT._space, '('];
+
+		node.declarations.forEach (function (declaration) {
+			result.push (
+				GENERATOR_OBJECT [declaration.type] (declaration),
+				',',
+				GENERATOR_OBJECT._space
+			);
+		});
+
+		result [result.length - 2] = ')';
+		result.push ('=', GENERATOR_OBJECT._space, GENERATOR_OBJECT [node.init.type] (node.init), ';');
+
+		return result;
+	},
+
 	VariableDeclarator: function (node) {
 		var GENERATOR_OBJECT = this, result;
 
