@@ -10,12 +10,15 @@ Now **you get to work with your own style** on your local machine and **push the
 
 #AST!
 
-An NPM module, [solidity-parser](https://github.com/ConsenSys/solidity-parser), exists if you want to generate AST of your solidity code.
+A couple of modules exist for you to generate AST of your Solidity Code:
+
+[solidity-parser](https://github.com/ConsenSys/solidity-parser) (by **tcoulter** from Consensys)
 
 ```bash
-npm install solidity-parser
+npm install --save solidity-parser
 ```
-I've also released a clone of solidity-parser called [solparse](https://github.com/duaraghav8/solparse) - it has a lot of bug fixes and I maintain it.
+
+[solparse](https://github.com/duaraghav8/solparse) (I'm the author)
 
 ```
 npm install solparse
