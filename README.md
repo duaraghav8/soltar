@@ -1,6 +1,15 @@
 # soltar
 Generate Solidity Code from its Abstract Syntax Tree. (The AST must follow the Spider Monkey API for defining AST nodes).
 
+#Application
+Don't like your peers' Solidity coding style? Always getting into the tabs vs. spaces debates? But still gotta comply with a standard style that everybody follows? No problem!
+
+Write your Solidity code with style that aesthetically pleases you, generate its AST and give it to Soltar to generate code in a standard style your company follows.
+
+Now **you get to work with your own style** on your local machine and **push the code with style that pleases your boss**!
+
+#AST!
+
 An NPM module, [solidity-parser](https://github.com/ConsenSys/solidity-parser), exists if you want to generate AST of your solidity code.
 
 ```bash
@@ -154,7 +163,3 @@ See **examples** for a [full contract](https://github.com/duaraghav8/soltar/tree
 #Future enhancements:
 
 	1. Commandline utility
-
-#PROBLEMS WITH solidity-parser
-There are currently a few bugs in solidity-parser. I've [listed them](https://github.com/duaraghav8/soltar/issues/6).
-You can instead choose to install solparse (see above).
